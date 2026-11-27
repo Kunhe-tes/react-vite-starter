@@ -15,8 +15,32 @@
 ## 目录、路由与样式
 
 - `index.html` 和 `src/main.tsx` 是唯一的 HTML 与 React 挂载入口。`src/App.tsx` 装配路由。独立 URL 页面在 `src/routes.tsx` 中登记并按需加载，页内视角用 React 状态切换。
-- 页面入口为 `src/pages/<PageName>/index.tsx`。页面专用组件、布局和数据转换随页面组织。跨页复用组件放入 `src/components/`，组件目录以 `index.tsx` 为入口，按实际需要建目录。
-- 全局基础样式放在 `src/styles/base.less`，专用 Less 样式随组件维护。父层负责区块排列、间距和滚动边界，宽表在自身容器内横向滚动。
+
+页面内按「页面入口 → 布局 → 业务区块 → 子组件」组织。以下目录按实际职责创建，简单页面从 `index.tsx` 开始即可。
+
+```text
+src/
+├── pages/
+│   └── <PageName>/
+│       ├── index.tsx                  页面装配、查询与跨区块状态
+│       ├── layout/
+│       │   ├── index.tsx              页面骨架与区块排列
+│       │   └── index.less             区块间距、布局断点与滚动边界
+│       ├── components/
+│       │   ├── <Section>/
+│       │   │   ├── index.tsx          独立业务区块
+│       │   │   ├── index.less         区块内部样式
+│       │   │   └── <ChildComponent>/  仅由该区块使用的子组件
+│       │   └── common/               本页多个区块复用的组件
+│       └── data/                     页面专用的数据获取与转换
+├── components/                       跨页面复用的组件
+└── styles/
+    └── base.less                      全局基础样式
+```
+
+- 先以完整业务区块为组件边界。有独立维护、实际复用或长期演进需求时，再在所属区块内拆出子组件。用业务名称命名区块，方便从页面定位源码。
+- 组件目录以 `index.tsx` 为入口。有专属 Less 样式时放在同目录的 `index.less`，由组件入口导入。布局层负责区块之间的排列和滚动边界，区块负责内部排版与响应式规则，宽表在自身容器内横向滚动。
+- 页面专用查询和数据转换留在 `data/`，跨页共用的请求逻辑沿用项目的公共接口层。 [接口、Mock 与持久化](api-and-data.md)
 
 ## 组件、状态与编码
 

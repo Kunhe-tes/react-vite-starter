@@ -5,7 +5,8 @@
 ## 项目结构与依赖
 
 - `index.html` 和 `src/main.tsx` 是唯一的 HTML 与 React 挂载入口。`src/App.tsx` 装配路由，独立 URL 页面在 `src/routes.tsx` 登记并按需加载。
-- 页面入口为 `src/pages/<PageName>/index.tsx`。专用组件随页面维护，跨页复用组件放入 `src/components/`。
+- 页面代码按「页面入口 → 布局 → 业务区块 → 子组件」组织。入口 `src/pages/<PageName>/index.tsx` 装配页面并管理跨区块状态，`layout/` 管理区块排列、间距和滚动边界，`components/` 存放业务区块，`data/` 存放页面专用数据逻辑。
+- 专用子组件放在所属业务区块下，本页复用放在页面的 `components/common/`，跨页复用放在 `src/components/`。目录按实际职责创建。 [页面目录结构与文件职责](docs/frontend/pages-and-components.md#目录路由与样式)
 - 使用 Node.js 22.9.0 或以上、npm 9.8.0 或以上，通过 `npm ci` 安装。`react` 和 `react-dom` 均声明为 `^18`，实际锁定版本须一致。
 - 优先复用现有依赖，变更依赖时同步更新 `package-lock.json`。选用或升级依赖前核对候选版本和兼容性。 [依赖管理与可选依赖范围](docs/frontend/dependencies.md)
 

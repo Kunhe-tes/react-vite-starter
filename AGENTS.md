@@ -1,23 +1,26 @@
 # AGENTS.md · 前端开发规范
 
-以项目配置、已确认的需求和接口契约为准。项目使用 React 18、TypeScript strict、Vite、React Router 和 Less。
+本仓库使用 React 18、TypeScript strict、Vite、React Router 和 Less。开发以现有项目配置、已确认的需求和接口契约为准。
 
-## 通用规范
+## 项目结构与依赖
 
-- **环境与依赖**。使用 Node.js 22.9.0 或以上、npm 9.8.0 或以上，通过 `npm ci` 安装。优先复用现有依赖。`react` 和 `react-dom` 均声明为 `^18`，实际锁定版本一致。依赖变更时同步更新 `package-lock.json`。
-- **入口与目录**。保留 `index.html` 和 `src/main.tsx` 作为唯一挂载入口。独立 URL 在 `src/routes.tsx` 登记。页面专用组件随页面维护，跨页复用组件放入 `src/components/`。
-- **组件与状态**。使用函数组件和声明式渲染。局部状态留在使用它的组件，共享状态放在最近的共同父层。派生值从现有数据计算，组件样式随组件维护。
-- **类型与代码风格**。显式定义 Props 和业务类型，外部数据在边界校验。遵循仓库的 Prettier 和 ESLint 配置，控制语句使用大括号。
-- **接口与配置**。复用已有请求入口，默认采用同源路径。真实请求失败时展示约定的错误或空态。带 `VITE_` 前缀的变量只放公开值，凭据由服务端管理。
-- **兼容性与验证**。JS 和 CSS 的构建目标为 Chromium 108。功能变更在浏览器验证受影响的流程。提交前运行 `npm run format:check`、`npm run typecheck`、`npm run lint` 和 `npm run build`。
+- `index.html` 和 `src/main.tsx` 是唯一的 HTML 与 React 挂载入口。`src/App.tsx` 装配路由，独立 URL 页面在 `src/routes.tsx` 登记并按需加载。
+- 页面入口为 `src/pages/<PageName>/index.tsx`。专用组件随页面维护，跨页复用组件放入 `src/components/`。
+- 使用 Node.js 22.9.0 或以上、npm 9.8.0 或以上，通过 `npm ci` 安装。`react` 和 `react-dom` 均声明为 `^18`，实际锁定版本须一致。
+- 优先复用现有依赖，变更依赖时同步更新 `package-lock.json`。选用或升级依赖前核对候选版本和兼容性。 [依赖管理与可选依赖范围](docs/frontend/dependencies.md)
 
-## 专题文档
+## 页面、组件与状态
 
-涉及下列具体工作时，查阅对应文档。
+- 新建页面前先明确核心流程。有原型时按原型核对布局和交互，无原型时先实现可运行的核心流程。 [页面与组件开发](docs/frontend/pages-and-components.md)
+- 使用函数组件和声明式渲染，用户操作放在事件回调中。局部状态留在使用它的组件，共享状态放在最近的共同父层。派生值从现有数据计算。
 
-| 场景                                                 | 文档                                                       |
-| ---------------------------------------------------- | ---------------------------------------------------------- |
-| 新增或升级依赖，核对候选版本和 peer 兼容性           | [依赖管理与可选依赖范围](docs/frontend/dependencies.md)    |
-| 新建页面、对照原型迁移，或组织复杂布局和共享状态     | [页面与组件开发](docs/frontend/pages-and-components.md)    |
-| 接入接口、设计 Mock、处理请求竞态或新增持久化        | [接口、Mock 与持久化](docs/frontend/api-and-data.md)       |
-| 调整环境配置、部署子路径，或核对浏览器验收与交接步骤 | [验证与部署](docs/frontend/verification-and-deployment.md) |
+## 接口、类型与配置
+
+- 复用已有请求入口，默认使用同源路径。接口失败时展示约定的错误或空态。接入新接口、Mock 或持久化时查阅对应约定。 [接口、Mock 与持久化](docs/frontend/api-and-data.md)
+- 显式定义 Props 和业务类型，外部数据在边界校验。带 `VITE_` 前缀的变量只放公开值，凭据由服务端管理。
+
+## 样式、兼容性与交付
+
+- 组件样式随组件维护，父层负责布局和滚动边界。遵循仓库的 Prettier 和 ESLint 配置，控制语句使用大括号。
+- JS 和 CSS 的构建目标为 Chromium 108。功能变更在浏览器验证受影响的流程。调整环境、部署子路径或核对验收步骤时查阅部署细则。 [验证与部署](docs/frontend/verification-and-deployment.md)
+- 提交前运行 `npm run format:check`、`npm run typecheck`、`npm run lint` 和 `npm run build`。
